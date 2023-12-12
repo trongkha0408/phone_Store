@@ -1,0 +1,480 @@
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="../../template/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/elegant-icons.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/magnific-popup.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/nice-select.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/owl.carousel.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/slicknav.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/toastr.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/style.css" type="text/css">
+
+
+<style>
+    @media only screen and (min-width: 1200px) {
+        .container {
+            max-width: 99%;
+        }
+    }
+    #searchPhone, #searchProduct{
+        font-size: 14px;
+        color: #b7b7b7;
+        height: 50px;
+        width: 100%;
+        border: 1px solid #e1e1e1;
+        padding-left: 20px;
+    }
+    a {
+        text-decoration: none;
+    }
+    a:hover{
+        color: rgb(8, 8, 115);
+    }
+    a:focus {     
+        color:rgb(24, 58, 197);    
+    }
+    img{
+        width: 100px;
+    }
+    #inputQuatity{
+        width: 45px;
+        text-align: center;
+    }
+    .shopping__cart__table table tbody tr td {
+        padding: 15px 0px 15px 0px;
+    }
+    .headImage{
+        width: 170px;
+    }
+    .headBarcode{
+        width: 150px;
+    }
+    .headTotal{
+        width: 100px;
+    }
+    .headQuatity{
+        width: 140px;
+    }
+    .headOther{
+        width: 80px;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield; /* Firefox */
+    }
+</style>
+<section class="smartphone-container" style="margin-top:80px">
+    <div class="container">
+
+        <div class="row main-page-container">
+            <div class="filter-container col-lg-3">
+                <div class="tag-container ">
+                    <div class="tags">
+                        <div class="cart__discount" style="margin-bottom: 0px;">
+                            <h6>Số điện thoại khách hàng</h6>
+                            <input type="number" name="searchPhone" id="searchPhone" placeholder="Nhập số điện thoại" required>
+                            <br>
+                            <a target="_blank" href="/customer/profile/" id="url-detail-customer" hidden><b>Chi tiết khách hàng</b></a>
+                            <br>
+                        </div>
+                    </div>
+
+                     <div class="col-lg-12">
+                        
+                        <div class="cart__total">
+                            <h6><b>Thông tin</b></h6>
+                            <ul>
+                                <li id="li-name" hidden>
+                                    Tên: <span></span>
+                                </li>
+                                <li id="li-address" hidden>
+                                    Địa chỉ: <span></span>
+                                </li>
+                                <li id="sumTotal">Tổng đơn: <span>$</span></li>
+                            </ul>
+                            <a class="primary-btn" onclick="checkCart()">Thanh toán</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="panel-right col-lg-9">
+                <div class="product-length-sort">
+                    <div class="cart__discount" style="width: 100%; height: 50px;">
+                        <h6>Nhập Barcode</h6>
+                        <input type="tel" placeholder="Bar code" style="width: 100%; " id="searchProduct">
+                    </div>
+                </div>
+                <section class="shopping-cart spad" style="padding-top: 10px; width: 100%;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="shopping__cart__table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="headBarcode">Mã code</th>
+                                                <th class="headImage">Hình ảnh</th>
+                                                <th>Sản phẩm</th>
+                                                <th class="headQuatity">Số lượng</th>
+                                                <th class="headTotal">Tổng</th>
+                                                <th class="headOther">Khác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbProduct">
+                                            {{!-- list product --}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="createCustomer" tabindex="-1" aria-labelledby="createCustomerLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="customer/store" method="post" id="form-create-customer">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createCustomerLabel">Thêm Khách Hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="fullName" class="form-label">Tên:</label>
+        <input type="text" name="fullName" id="fullName" class="form-control" required>
+
+        <label for="phone" class="form-label">Số điện thoại:</label>
+        <input type="number" name="phone" id="phone" class="form-control" required>
+
+        <label for="address" class="form-label">Địa chỉ:</label>
+        <input type="text" name="address" id="address" class="form-control" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">thoát</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+    
+
+    var template = `<tr>
+                        <td>__BARCODE__</td>
+                        <td>
+                            <div>
+                                <img src="/Image/product/__IMAGE__" alt="">
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <h4><b>__NAME__</b></h4>
+                                <br>
+                                <h5>Giá: <b>__PRICE__ đ</b></h5>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="quantity">
+                                <div>
+                                    <i class="fa-solid fa-less-than" onclick="decreaseQuantity('__ID__')"></i>
+                                    <input id="inputQuatity" type="number" value="__QUANTITY__" onchange="changeQuantity(this)" data-id = "__ID__">
+                                    <i class="fa-solid fa-greater-than" onclick="increaseQuantity('__ID__')"></i>
+                                </div>
+                            </div>
+                        </td>
+                        <td><b>__TOTAL__ đ</b></td>
+                        <td><i class="fa fa-close" onclick="removeCartItem('__ID__')"></i></td>
+                    </tr>`;
+
+    $(function () {
+        let customer = JSON.parse(localStorage.getItem('customer'));
+        if(customer) {
+            $("#searchPhone").val(customer.phone);
+        }
+
+        loadEvents();
+        searchCustomer();
+        searchProduct();
+        submitCustomer();
+        loadCustomer(customer);
+        loadProducts();
+    });
+
+    function checkCart() {
+        let cart = localStorage.getItem("cart");
+        let customer = localStorage.getItem("customer");
+        if (cart!= null && customer != null) {
+            window.location.href = "/customer/pruchase"
+        }
+        else {
+            showToast(new notice("error", "toast-top-right", "Chưa đủ thông tin"))
+        }
+    }
+
+    function checkPhone(phone) {
+        var phoneRegex = /^0[0-9]{9}$/
+        if (phoneRegex.test(phone)) {
+            return true;
+        }
+        return false;
+    }
+
+    function loadProducts() {
+        $("#tbProduct").html("");
+        let cart = localStorage.getItem("cart");
+
+        if (cart !== null) {
+
+            cart = JSON.parse(cart);
+            let sumTotal = 0;
+            let totalQuantity = 0;
+
+            for (var i = 0; i < cart.length; i++) {
+                var product = cart[i];
+                let tr = template;
+                tr = tr.replace("__BARCODE__", product.barcode);
+                tr = tr.replace("__IMAGE__", product.image);
+                tr = tr.replace("__NAME__", product.name);
+                tr = tr.replace("__PRICE__", product.price);
+                tr = tr.replace("__QUANTITY__", product.quantity);
+                tr = tr.replace("__TOTAL__", product.price * product.quantity);
+                tr = tr.replaceAll("__ID__", product.productId);
+                $("#tbProduct").append(tr);
+                sumTotal += product.price * product.quantity;
+                totalQuantity += product.quantity
+            }
+            localStorage.setItem('sumTotal', sumTotal);
+            localStorage.setItem('totalQuantity', totalQuantity);
+
+            $("#sumTotal").find("span").html(sumTotal + " đ");
+        } else {
+            let string = "<br><p>Danh sách sản phẩm</p>";
+            $("#tbProduct").append(string);
+        }
+    }
+
+
+    function submitCustomer() {
+        $("#form-create-customer").on("submit", function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let inputPhone = $("#phone")
+            if (checkPhone(inputPhone.val())) {
+                $.ajax({
+                    url: "/customer/store",
+                    type: "POST",
+                    dataType: "json",
+                    data: form.serialize(),
+                    success: function(response) {
+                        let data = response.data;
+                        if(data) {
+                            let customer = {
+                                fullName: response.data.fullName,
+                                phone: response.data.phoneNumber,   
+                                address: response.data.address
+                            };
+                            localStorage.setItem('customer', JSON.stringify(customer));
+                            loadCustomer(response.data);
+                            showToast(new notice("success", "toast-top-right", "Tạo khách hàng mới thành công"));
+                            $("#createCustomer").modal("toggle");
+                        }
+                    },
+                    error: function(err) {
+                        showToast(new notice("error", "toast-top-right", err.responseJSON.message));
+
+                    },
+                })
+            } else {
+                showToast(new notice("error", "toast-top-right", "Số không hợp lệ"));
+            } 
+        })
+    }
+
+    function searchCustomer(trigger = false) {
+        $("#searchPhone").keyup(function (e) {
+            e.preventDefault();
+            let input = $(this);
+
+            if (e.keyCode == 13 || trigger) {
+                if (checkPhone(input.val())) {
+                    $.ajax({
+                        url: "/customer/search/" + input.val(),
+                        type: "GET",
+                        success: function (response) {
+                            let data = response.data;
+                            if(data) {
+                                let customer = {
+                                    _id: data._id,
+                                    fullName: data.fullName,
+                                    phone: data.phoneNumber,   
+                                    address: data.address
+                                };
+                                localStorage.setItem('customer', JSON.stringify(customer));
+                                loadCustomer(data);
+                               
+                                
+                            } else {
+                                 $("#form-create-customer").find("input[name=phone]").val(input.val());
+                                $("#createCustomer").modal("toggle");
+                                showToast(new notice("error", "toast-top-right", "Khách hàng chưa tồn tại"))
+                            }
+                            
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+                } else {
+                    showToast(new notice("error", "toast-top-right", "Số không hợp lệ"))
+                }
+            }
+        });
+    }
+
+    function searchProduct() {
+        $("#searchProduct").keyup(function (e) {
+            e.preventDefault();
+            let input = $(this);
+
+            if (e.keyCode == 13) {
+                $.ajax({
+                    url: "/customer/search-product/" + input.val(),
+                    type: "GET",
+                    success: function (response) {
+                        if (response.data) {
+                            let data = response.data;
+                            addToCart(data);
+                            loadProducts();
+                        }
+                        else{
+                            showToast(new notice("error", "toast-top-right", "Barcode không tồn tại"))
+                        }
+                        
+                    },
+                    error: function (err) {
+                        console.log(err);
+
+                    }
+                })
+            }
+        });
+    }
+
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        let existingProduct = cart.find(function (item) {
+            return item.productId === product._id;
+        });
+
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({
+                barcode: product.barcode,
+                productId: product._id,
+                name: product.name,
+                image: product.image,
+                price: product.retailPrice,
+                quantity: 1
+            });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function loadCustomer(data) {
+        if (data) {
+            $("#li-name").find("span").html(data.fullName);
+            $("#li-name").attr("hidden", false);
+
+            let url = $("#url-detail-customer").attr("href");
+            $("#url-detail-customer").attr("href", url + data._id);
+            $("#url-detail-customer").attr("hidden", false);
+
+            $("#li-address").find("span").html(data.address);
+            $("#li-address").attr("hidden", false);
+        } else {
+            $("#li-name").find("span").html(null);
+            $("#li-name").attr("hidden", true);
+
+            $("#url-detail-customer").attr("hidden", true);
+
+            $("#li-address").find("span").html(null);
+            $("#li-address").attr("hidden", true);
+        }
+    }
+
+    function decreaseQuantity(productId) {
+        updateCartItemQuantity(productId, -1);
+        loadProducts();
+    }
+
+    function increaseQuantity(productId) {
+        updateCartItemQuantity(productId, 1);
+        loadProducts();
+    }
+
+    function changeQuantity(element) {
+        let quantity = parseInt($(element).val());
+        let productId = $(element).data("id");
+        updateCartItemQuantity(productId, quantity);
+        loadProducts();
+    }
+
+    function updateCartItemQuantity(productId, change = 0) {
+        var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+        var index = cartItems.findIndex(item => item.productId === productId);
+        if (index !== -1) {
+            cartItems[index].quantity = Math.abs(change) == 1 ? cartItems[index].quantity + change : change;
+
+            if (cartItems[index].quantity <= 0) {
+                cartItems.splice(index, 1);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+        }
+    }
+
+    function removeCartItem(productId) { 
+        var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        var updatedCartItems = $.grep(cartItems, function (item) {
+            return item.productId !== productId;
+        });
+        localStorage.setItem('cart', JSON.stringify(updatedCartItems));
+        loadProducts();
+    }
+
+    function loadEvents() {
+        setTimeout(() => {
+            $('#flash-alert ').fadeOut(2000)
+            $(".alert-success").fadeOut(2000)
+            $(".alert-danger").fadeOut(2000)
+        }, 1000);
+    }
+
+    
+</script>
+
+</div>
+</section>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+         {{#with products}}
+        <div class="modal-header">
+          <h4 class="modal-title">Update Product ({{name}}) </h4>
+        </div>
+        {{/with}}
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+                {{#with products}}
+                <form method="post" action="/products/update/{{_id}}" enctype="multipart/form-data">
+                  <div class="form-group">
+                        <label for="name">Name</label>
+                        <input class="form-control" type="text" placeholder="Enter Product Name" id="name" name="name" value="{{name}}">
+                  </div>
+                 <div class="form-group">
+                        <label for="barcode">Barcode</label>
+                        <input class="form-control" type="text" placeholder="Enter Barcode" id="barcode" name="barcode" value="{{barcode}}">
+                    </div>
+                  <div class="form-group">
+                        <label for="importprice">ImportPrice</label>
+                        <input class="form-control" type="text" placeholder="Enter Import Price" id="importprice" name="importPrice" value="{{importPrice}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="retailprice">RetailPrice</label>
+                        <input class="form-control" type="text" placeholder="Enter Retail Price" id="retailprice" name="retailPrice" value="{{retailPrice}}">
+                    </div>
+                    <div class="mb-3">
+                          <label for="image" class="form-label">Image</label>
+                          <input class="form-control" type="file" id="image" name="image">
+                          <img src="/Image/product/{{image}}" width="100" class="img-thumbnail">
+                    </div>
+                    <input type="hidden" name="old_image" value="{{image}}">
+                     <div class="form-group">
+                        <label for="category">Category</label>
+                          <select id="category" name="category" class="form-control">
+                            {{#check category "Phone"}}
+                            <option value="Phone" selected>Phone</option>
+                            <option value="HeadPhone">HeadPhone</option>
+                            <option value="Battery">Battery</option>
+                            <option value="USB">USB</option>
+                            {{/check}}
+
+                             {{#check category "HeadPhone"}}
+                              <option value="Phone">Phone</option>
+                            <option value="HeadPhone" selected>HeadPhone</option>
+                            <option value="Battery">Battery</option>
+                            <option value="USB">USB</option>
+                            {{/check}}
+
+                             {{#check category "Battery"}}
+                              <option value="Phone">Phone</option>
+                            <option value="HeadPhone">HeadPhone</option>
+                            <option value="Battery" selected>Battery</option>
+                            <option value="USB">USB</option>
+                            {{/check}}
+
+                            {{#check category "USB"}}
+                              <option value="Phone">Phone</option>
+                            <option value="HeadPhone">HeadPhone</option>
+                            <option value="Battery">Battery</option>
+                            <option value="USB" selected>USB</option>
+                            {{/check}}
+
+                            </select>
+                    </div>
+                {{/with}}
+                {{#if message}}
+                <div class="alert alert-{{type}}">
+                   {{message}}
+                </div>
+                {{/if}}
+            
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </div>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    setTimeout(() => {
+        $('#flash-alert ').fadeOut(2000)
+        $(".alert-success").fadeOut(2000)
+        $(".alert-danger").fadeOut(2000)
+    }, 1000);
+</script>
+  </body>
+</html>

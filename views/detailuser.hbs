@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <title>User Information</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-6 col-md-5 col-lg-4">
+                <p ><a href="/users" >Quay lại</a></p>
+                {{#with _users}}
+                <div class="card" class="w-100">
+                    <img class="card-img-top" src="/Image/avatar/{{avatar}}"
+                        alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">{{fullname}}</h4>
+                        <p class="card-text">Email: <strong>{{email}}</strong></p>
+                        <p class="card-text">UserName: <strong>{{username}}</strong></p>
+                        <p class="card-text">Status: <strong>{{status}}</strong></p>
+                        <p class="card-text">Role: <strong>{{role}}</strong></p>
+                        <p class="card-text">CreatedAt: <strong>{{format createdAt}}</strong></p>
+
+                        <a href="/users/watchsales/{{_id}}" class="btn btn-primary">Xem thông tin bán hàng</a>
+                    </div>
+                </div>
+                {{/with}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

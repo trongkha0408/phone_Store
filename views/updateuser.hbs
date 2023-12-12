@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+         {{#with users}}
+        <div class="modal-header">
+          <h4 class="modal-title">Update User ({{fullname}}) </h4>
+        </div>
+        {{/with}}
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+                {{#with users}}
+                <form method="post" action="/users/update/{{_id}}" enctype="multipart/form-data">
+                  <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input class="form-control" type="text" placeholder="Enter Full Name" id="name" name="name" value="{{fullname}}">
+                  </div>
+                 <div class="form-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="text" placeholder="Enter Email" id="email" name="email" value="{{email}}">
+                    </div>
+                  <div class="form-group">
+                        <label for="status">Status</label>
+                         <select class="form-control" id="status" name="status">
+                                {{#check status "Active"}}
+                                <option value="Active" selected>Active</option>
+                                <option value="Inactive">Inactive</option>
+                                {{/check}}
+
+                                {{#check status "Inactive"}}
+                                <option value="Active">Active</option>
+                                <option value="Inactive" selected>Inactive</option>
+                                {{/check}}
+                                
+
+                            </select>
+                    </div>
+                    <div class="mb-3">
+                          <label for="image" class="form-label">Avatar</label>
+                          <input class="form-control" type="file" id="image" name="avatar">
+                          <img src="/Image/avatar/{{avatar}}" width="100" class="img-thumbnail">
+                    </div>
+                    <input class="form-control" type="hidden" name="old_image" value="{{avatar}}">
+                     <div class="form-group">
+                        <label for="role">Role</label>
+                          <select class="form-control" id="role" name="role">
+                              {{#check role "Admin"}}
+                                <option value="Admin" selected>Admin</option>
+                                <option value="Employee">Employee</option>
+                                {{/check}}
+
+                                  {{#check role "Employee"}}
+                                <option value="Admin">Admin</option>
+                                <option value="Employee" selected>Employee</option>
+                                {{/check}}
+                            
+                            </select>
+                    </div>
+                {{/with}}
+                {{#if message}}
+                <div class="alert alert-danger">
+                   {{message}}
+                </div>
+                {{/if}}
+            
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </div>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+   <script>
+    setTimeout(() => {
+        $('#flash-alert ').fadeOut(2000)
+        $(".alert-success").fadeOut(2000)
+        $(".alert-danger").fadeOut(2000)
+    }, 1000);
+</script>
+  </body>
+</html>

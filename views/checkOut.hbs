@@ -1,0 +1,238 @@
+<link rel="stylesheet" href="../../CSS/Product.css">
+<link rel="stylesheet" href="../../CSS/Management.css">
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="../../template/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/elegant-icons.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/magnific-popup.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/nice-select.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/owl.carousel.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/slicknav.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/toastr.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/style.css" type="text/css">
+
+
+<style>
+    #searchPhone,
+    #searchProduct {
+        font-size: 14px;
+        color: #b7b7b7;
+        height: 50px;
+        width: 100%;
+        border: 1px solid #e1e1e1;
+        padding-left: 20px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: rgb(8, 8, 115);
+    }
+
+    a:focus {
+        color: rgb(24, 58, 197);
+    }
+
+    img {
+        width: 100px;
+    }
+
+    #inputQuatity {
+        width: 45px;
+        text-align: center;
+    }
+
+    .shopping__cart__table table tbody tr td {
+        padding: 15px 0px 15px 0px;
+    }
+
+    .headImage {
+        width: 140px;
+    }
+
+    .headQuatity {
+        width: 140px;
+    }
+
+    .input-group>.form-control,
+    .input-group>.form-select {
+        margin-left: 30%;
+    }
+</style>
+<section class="smartphone-container" style="margin-top:80px">
+    <div class="container">
+
+        <div class="row main-page-container">
+            <div class="filter-container col-lg-12">
+                <div class="tag-container ">
+                    <div class="row cart__total">
+                        <h5><b>Thông tin</b></h5>
+                        <div class="col-lg-6">
+
+                            <ul>
+                                <li id="li-name">
+                                    Tên: <span></span>
+                                </li>
+                                <li id="li-phone">
+                                    Số điện thoại: <span></span>
+                                </li>
+                                <li id="li-address">
+                                    Địa chỉ: <span></span>
+                                </li>
+                                <li id="dateOrder">
+                                    Ngày: <span></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul>
+                                <li id="li-quatity">
+                                    Số lượng: <span></span>
+                                </li>
+                                <li id="sumTotal">
+                                    Đơn giá: <span>$</span>
+                                </li>
+                                <li id="giveMoney">
+                                    <div class="input-group">
+                                        Tiền khách đưa
+                                        <input id="input-giveMoney" type="number" class="inputMoney form-control">
+                                    </div>
+                                </li>
+                                <li id="backMoney">
+                                    Tiền thối <span> đ</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="primary-btn" onclick="submitCheckOut()">Thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="createCustomer" tabindex="-1" aria-labelledby="createCustomerLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label for="fullName" class="form-label">Bạn cố muốn in bill không?</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">thoát</button>
+                <button type="submit" class="btn btn-primary">In</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(function () {
+        loadEvents();
+        backMoney();
+        let customer = JSON.parse(localStorage.getItem('customer'));
+        loadCustomer(customer);
+    });
+
+    function backMoney() {
+        $("#input-giveMoney").keyup(function (e) {
+            e.preventDefault();
+            let input = $(this);
+            let sumTotal = localStorage.getItem("sumTotal");
+
+            
+            let backMoney = input.val() - sumTotal;
+            if (backMoney >= 0) {
+                localStorage.setItem('backMoney', backMoney);
+                $("#backMoney").find("span").html(backMoney + " đ");
+            } else {
+                showToast(new notice("error", "toast-top-right", "Số tiền chưa đủ"))
+            }
+
+        });
+    }
+
+    function loadCustomer(data) {
+        let time = new Date();
+        if (data) {
+            $("#li-phone").find("span").html(data.phone);
+
+            $("#li-name").find("span").html(data.fullName);
+
+            $("#li-address").find("span").html(data.address);
+
+
+            $("#dateOrder").find("span").html(time.getDate() + "-" + time.getMonth() + "-" + time.getFullYear());
+
+            $("#li-quatity").find("span").html(localStorage.getItem("totalQuantity") + " " + "sản phẩm");
+
+            $("#sumTotal").find("span").html(localStorage.getItem("sumTotal") + " đ");
+        } else {
+            $("#li-name").find("span").html(null);
+
+            $("#li-address").find("span").html(null);
+        }
+    }
+
+    function submitCheckOut() {
+        let customer = JSON.parse(localStorage.getItem("customer"));
+        let products = JSON.parse(localStorage.getItem("cart"));
+        let amountPaid = $("#input-giveMoney").val();
+        let total = localStorage.getItem("sumTotal");
+
+        let listProduct = [];
+        $.each(products, function (index, product) {
+            listProduct.push({
+                productId: product.productId,
+                productName: product.name,
+                quantity: product.quantity,
+                unitPrice: product.price
+            });
+        });
+        if (customer && listProduct.length > 0 && amountPaid != null) {
+            let phoneNumber = customer.phone;
+            $.ajax({
+                url: "/customer/purchase/store",
+                type: "POST",
+                contentType: "application/json", // set the content type to JSON
+                data: JSON.stringify({
+                    phoneNumber: phoneNumber,
+                    purchase: listProduct,
+                    amountPaid: amountPaid,
+                    totalAmount: total
+                }),
+                success: function (response) {
+                    showToast(new notice("success", "toast-top-right", "Tạo đơn thành công"));
+                    localStorage.clear();
+                    setTimeout(function() {
+                        window.location.href = "/customer/orders/create";
+                    }, 2000);
+                },
+                error: function (err) {
+                    showToast(new notice("error", "toast-top-right", "Đã xảy ra lỗi"))
+                }
+            });
+        }
+        console.log(customer, amountPaid, listProduct);
+    }
+
+
+
+    function loadEvents() {
+        setTimeout(() => {
+            $('#flash-alert ').fadeOut(2000)
+            $(".alert-success").fadeOut(2000)
+            $(".alert-danger").fadeOut(2000)
+        }, 1000);
+    }
+
+</script>
+
+</div>
+</section>

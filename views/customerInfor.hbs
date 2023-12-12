@@ -1,0 +1,136 @@
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="../../template/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/elegant-icons.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/magnific-popup.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/nice-select.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/owl.carousel.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/slicknav.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/toastr.min.css" type="text/css">
+<link rel="stylesheet" href="../../template/css/style.css" type="text/css">
+
+<style>
+    @media only screen and (min-width: 1200px) {
+        .container {
+            max-width: 99%;
+        }
+    }
+    .showProduct {
+        width: 100%; /* Đảm bảo chiều rộng của bảng là 100% */
+        max-height:100px; /* Đặt chiều cao tối đa cho container */
+        overflow-y: auto; /* Thêm thanh cuộn dọc khi danh sách vượt quá chiều cao tối đa */
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        margin: 0;
+        padding: 0;
+        text-align: justify; /* Căn lề hai bên */
+    }
+
+    li span {
+        margin-left: 10px; /* Tạo khoảng cách giữa nội dung và span */
+    }
+</style>
+
+<section class="customerInfor">
+    {{#if customer}}
+    <div class="tag-container ">
+        <div class="col-lg-12">
+            <div class="cart__total">
+                <div class="card">
+                    <div class="card-body pb-0">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div class="text-center border-end">
+                                    <img src="/Image/avater.jpg" class="img-fluid avatar-xxl rounded-circle" alt="">
+                                    <h4 class="text-primary font-size-20 mt-3 mb-2">{{customer.fullName}}</h4>
+                                </div>
+                            </div><!-- end col -->
+                            <div class="col-md-9">
+                                <div class="ms-3">
+                                    <div>
+                                        <h4 class="card-title mb-2">{{customer.phoneNumber}}</h4>
+                                        <h5 class="mb-0 text-muted">{{customer.address}}<h5>
+                                    </div>
+                                    <div class="row my-4">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <p class="text-muted mb-2 fw-medium"><i class="mdi mdi-email-outline me-2"></i>Tổng tiền đã mua sắm
+                                                </p>
+                                                <p class="text-muted fw-medium mb-0"><i class="mdi mdi-phone-in-talk-outline me-2"></i>{{customer.totalAmountSpent}} đ
+                                                </p>
+                                            </div>
+                                        </div><!-- end col -->
+                                    </div><!-- end row -->
+                                </div>
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div>
+        </div>
+    </div>
+
+    <h2>Purchase History</h2>
+    
+        {{#if customer.purchaseHistory}}
+
+        {{#each customer.purchaseHistory}}
+
+        <section class="shopping-cart spad">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="cart__total">
+                            <h6>Thông tin đơn hàng</h6>
+                            <ul>
+                                <li>Ngày: <span>{{orderDate}}</span></li>
+                                <li>Tổng đơn: <span>{{totalAmount}} đ</span></li>
+                                <li>Số tiền khách đưa: <span>{{amountPaid}} đ</span></li>
+                                <li>Tiền thối: <span>{{changeReturned}} đ</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="shopping__cart__table">
+                            <table class="showProduct">
+                                <thead>
+                                    <tr>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {{#each products}}
+                                    <tr>
+                                        <td class="productName">{{ productName }}</td>
+                                        <td class="unitPrice">{{ unitPrice }} đ</td>
+                                        <td class="quatity">{{ quantity }} sản phẩm</td>
+                                        <td class="total">{{ multiply unitPrice quantity }} đ</td>
+                                    </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </section>
+        {{/each}}
+
+        {{else}}
+            <p>No purchase history available.</p>
+        {{/if}}
+
+    {{else}}
+        <p>No customer information available.</p>
+    {{/if}}
+    
+</section>

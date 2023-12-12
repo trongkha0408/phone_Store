@@ -1,0 +1,15 @@
+.customerInfor{
+
+    text-align: center;
+}
+
+.container .checkCustomer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#checkoutForm {
+    width: 400px;
+}

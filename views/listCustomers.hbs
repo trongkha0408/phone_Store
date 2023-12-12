@@ -1,0 +1,277 @@
+<style>
+    .headPhone {
+        width: 150px;
+    }
+    .headName {
+        width: 300px;
+    }
+    .headAddress {
+        width: 500px;
+    }
+    .headPoint {
+        width: 100px;
+    }
+</style>
+
+<div class="container">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>Customer <b>Details</b></h2>
+                        </div>
+                          
+                    <div class="col-sm-4">
+                       
+                        <div class="search-box">
+                             <i class="material-icons">&#xE8B6;</i>   
+                            <input type="number" name="searchPhone" id="searchPhone" class="form-control" placeholder="số điện thoại">
+                            
+                        </div>
+                          
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th class="headPhone">Số điện thoại</th>
+                        <th class="headName">Tên</th>
+                        <th class="headAddress">Địa chỉ</th>
+                        <th class="headPoint">Điểm</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbProduct" style="vertical-align:middle">
+                    {{!-- List customer --}}
+                </tbody>
+            </table>
+        </div>
+    </div>  
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="createCustomerLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <input type="hidden" name="id" value="">
+        <h5 class="modal-title" id="createCustomerLabel">Xác nhận</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <span>Bạn muốn xoá khách này.</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">thoát</button>
+        <button type="submit" class="btn btn-primary">Xoá</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomerLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="customer/store" method="post" id="form-update-customer">
+      <div class="modal-header">
+        <input type="hidden" name="id" value="">
+        <h5 class="modal-title" id="updateCustomerLabel">Sửa Khách Hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="fullName" class="form-label">Tên:</label>
+        <input type="text" name="fullName" id="fullName" class="form-control" required>
+
+        <label for="phone" class="form-label">Số điện thoại:</label>
+        <input type="number" name="phone" id="phone" class="form-control" readonly required>
+
+        <label for="address" class="form-label">Địa chỉ:</label>
+        <input type="text" name="address" id="address" class="form-control" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+    $(function () {
+        loadEvents();
+        loadCustomers();
+        deleteCustomer();
+        submitUpdate();
+        searchCustomer();
+    });
+
+    function loadCustomers() {
+        $("#tbProduct").html("");
+        let cart = localStorage.getItem("cart");
+
+        $.ajax({
+            url: "/customer/data",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                let data = response.data;
+                if(data) {
+                    data.forEach(customer => {
+                        console.log(customer);
+                    let row = `<tr >
+                        <td>${customer.phoneNumber}</td>
+                        <td><a href="/customer/profile/${customer._id}">${customer.fullName}</a></td>
+                        <td>${customer.address}</td>
+                        <td>${customer.totalAmountSpent}</td>
+                        <td>
+                            <a class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit" onclick="confirmUpdate('${customer._id}', '${customer.phoneNumber}', '${customer.fullName}', '${customer.address}')"><i class="fa fa-edit"></i></a>
+                            <button type="button" class="btn btn-danger btn-sm rounded-0" data-placement="top" title="Delete" data-toggle="modal" rel="tooltip" data-target="#deleteModal" onclick="confirmDelete('${customer._id}')"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+
+                    $("#tbProduct").append(row);
+                });
+                } else {
+                    let string = "<br><p>Danh sách Khách hàng không có</p>";
+                    $("#tbProduct").append(string);   
+                }
+                
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+
+    function confirmUpdate(id, phone, name, address) {
+        $("#updateCustomer").find(".modal-content").find(".modal-header").find("input[name=id]").val(id);
+        $("#updateCustomer").find("input[name=fullName]").val(name);
+        $("#updateCustomer").find("input[name=phone]").val(phone);
+        $("#updateCustomer").find("input[name=address]").val(address);
+        $("#updateCustomer").modal("toggle"); 
+    }
+
+    function submitUpdate() {
+        $("#form-update-customer").on("submit", function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let customerId = $("#updateCustomer").find(".modal-content").find(".modal-header").find("input[name=id]").val();
+            if (customerId) {
+                $.ajax({
+                    url: `/customer/update/${customerId}`,
+                    type: "PUT",
+                    dataType: "json",
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            showToast(new notice("success", "toast-top-right", "Cập nhật thành công"));
+                            $("#updateCustomer").modal("toggle"); 
+                            loadCustomers();
+                        } else {
+                            console.error("Error updating customer:", response.message);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            } else {
+                showToast(new notice("error", "toast-top-right", "Số không hợp lệ"))
+            } 
+        })
+    }
+
+    function confirmDelete(id) {
+        $("#confirmDelete").find(".modal-content").find(".modal-header").find("input[name=id]").val(id);
+        $("#confirmDelete").modal("toggle"); 
+    }
+
+    function deleteCustomer() {
+        $("#confirmDelete").find("button[type=submit]").on("click", function(e) {
+            let customerId = $("#confirmDelete").find(".modal-content").find(".modal-header").find("input[name=id]").val();
+            $.ajax({
+            url: `/customer/delete/${customerId}`,
+            type: "DELETE",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    showToast(new notice("success", "toast-top-right", "Xoá thành công"));
+                    loadCustomers();
+                } else {
+                    console.error("Error deleting customer:", response.message);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            },
+            complete: function () {
+                $("#confirmDelete").modal("toggle"); 
+            }
+        });
+        })
+    }
+
+    function searchCustomer() {
+        $("#searchPhone").keyup(function (e) {
+            e.preventDefault();
+            let input = $(this);
+
+            if (e.keyCode == 13 || trigger) {
+                if (checkPhone(input.val())) {
+                    $.ajax({
+                        url: "/customer/search/" + input.val(),
+                        type: "GET",
+                        success: function (response) {
+                            let customer = response.data;
+                            if(customer) {
+                                $("#tbProduct").html("");
+                                let row = `<tr>
+                                    <td>${customer.phoneNumber}</td>
+                                    <td><a href="/customer/profile/${customer._id}">${customer.fullName}</a></td>
+                                    <td>${customer.address}</td>
+                                    <td>${customer.totalAmountSpent}</td>
+                                    <td>
+                                        <a class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit" onclick="confirmUpdate('${customer._id}', '${customer.phoneNumber}', '${customer.fullName}', '${customer.address}')"><i class="fa fa-edit"></i></a>
+                                        <button type="button" class="btn btn-danger btn-sm rounded-0" data-placement="top" title="Delete" data-toggle="modal" rel="tooltip" data-target="#deleteModal" onclick="confirmDelete('${customer._id}')"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>`;
+
+                                $("#tbProduct").append(row); 
+                            } else {
+                                showToast(new notice("error", "toast-top-right", "Khách hàng chưa tồn tại"))
+                            }
+                            
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+                } else {
+                    showToast(new notice("error", "toast-top-right", "Số không hợp lệ"))
+                }
+            }
+        });
+    }
+
+    function checkPhone(phone) {
+        var phoneRegex = /^0[0-9]{9}$/
+        if (phoneRegex.test(phone)) {
+            return true;
+        }
+        return false;
+    }
+
+    function loadEvents() {
+        setTimeout(() => {
+            $('#flash-alert ').fadeOut(2000)
+            $(".alert-success").fadeOut(2000)
+            $(".alert-danger").fadeOut(2000)
+        }, 1000);
+    }
+
+</script>

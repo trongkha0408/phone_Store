@@ -1,0 +1,156 @@
+<section class="smartphone-container">
+        <div class="container">
+
+            <div class="row main-page-container">
+                <div class="panel-right">
+                        {{#if message}}
+                        <div class="alert alert-{{type}}" role="alert" style="text-align:center">
+                                {{message}}
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="row product-category-container">
+                  
+        <div class="container-xl">
+            <div class="table-responsive">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <h2>Product <b>Details</b></h2>
+                                </div>
+                            <div class="col-sm-2">
+                                <a href="/products/add"><button type="button" class="btn btn-success"><i class="material-icons"></i>Add New Product</button></a>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <table class="table table-striped table-hover table-bordered">
+                        {{#if products}}
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>BarCode<i class="fa fa-sort"></i></th>
+                                <th>Import Price</th>
+                                <th>Retail Price</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                {{#check role "Admin"}}
+                                <th>Action</th>
+                                {{/check}}
+                            </tr>
+                        </thead>
+                        <tbody style="vertical-align:middle">
+                            {{#each products}}
+                            {{#with this}}
+                            <tr >
+                                <td>{{ sum @index 1}}</td>
+                                <td>{{name}}</td>
+                                <td><img
+                                    src="/Image/product/{{image}}"
+                                    alt=""
+                                    style="height: 200px"/></td>
+                                <td>{{barcode}}</td>
+                                <td>{{formatprice importPrice}}</td>
+                                <td>{{formatprice retailPrice}}</td>
+                                <td>{{category}}</td>
+                                <td>{{format createdAt}}</td>
+                                {{#check ../role "Admin"}}
+                                <td><a href="products/update/{{_id}}" class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                                <button type="button" class="btn btn-danger btn-sm rounded-0" data-placement="top" title="Delete" data-toggle="modal" rel="tooltip" data-target="#deleteModal" data-id="{{_id}}" data-name="{{name}}"><i class="fa fa-trash"></i></button></td>
+                                {{/check}}
+                            </tr>
+                            {{/with}}
+                            {{/each}}
+                        </tbody>
+                        {{else}}
+                        <h1 class="text-center text-secondary mt-5">No Product not found</h1>
+                        {{/if}}
+                    </table>
+                    <div class="clearfix">
+                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                        <ul class="pagination">
+                            <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                            <li class="page-item"><a href="#" class="page-link">4</a></li>
+                            <li class="page-item"><a href="#" class="page-link">5</a></li>
+                            <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>  
+        </div>
+                    </div>
+        </div>
+
+
+
+{{!-- Confirm delete --}}
+
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       Are you sure to delete product <strong></strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" data-dismiss="modal">No</button>
+        <button id="btn-delete-product" type="button" class="btn btn-danger" id="delete">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{{!-- delete hidden form --}}
+    <form method="post" name="delete-form"></form>
+
+<script>
+    var text=document.querySelector('.modal-body strong');
+    var productId;
+    var deleteform=document.forms['delete-form']
+    document.addEventListener('DOMContentLoaded',function(){
+        $('#deleteModal').on('show.bs.modal', function(event) {
+          var button=$(event.relatedTarget);
+          productId=button.data('id')
+          var name=button.data('name')
+          text.innerHTML=name;
+    });
+
+    var btndeleteproduct=document.getElementById('btn-delete-product');
+    btndeleteproduct.onclick=function(){
+        deleteform.action='/products/delete/'+productId;
+        deleteform.submit();
+    }    
+    });
+
+
+</script>
+<script>
+    setTimeout(() => {
+        $('#flash-alert ').fadeOut(2000)
+        $(".alert-success").fadeOut(2000)
+        $(".alert-danger").fadeOut(2000)
+    }, 1000);
+</script>
+</div>
+</section>
+
+
+

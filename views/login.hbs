@@ -1,0 +1,68 @@
+<section class="vh-100" class="sb-nav-fixed">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form method="post" action="users/login">
+
+          <div class="divider d-flex align-items-center my-4">
+            <p class="text-center fw-bold mx-3 mb-0" style="font-weight:bold;font-size:40px">Login</p>
+          </div>
+
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="form3Example3" class="form-control form-control-lg"
+              placeholder="Enter a valid username" name="username" 
+              {{#if username}}
+              value={{username}} 
+              {{/if}}
+              />
+            <label class="form-label" for="form3Example3">UserName</label>
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <input type="password" id="form3Example4" class="form-control form-control-lg"
+              placeholder="Enter password" name="password"
+                {{#if password}}
+               value={{password}}
+               {{/if}}
+                />
+            <label class="form-label" for="form3Example4">Password</label>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Checkbox -->
+            <div class="form-check mb-0">
+              <input class="form-check-input me-2" type="checkbox" id="form2Example3" name="remember" />
+              <label class="form-check-label" for="form2Example3">
+                Remember me
+              </label>
+            </div>
+            <a href="#!" class="text-body">Forgot password?</a>
+          </div>
+
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg"
+              style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+          </div>
+             {{#if loginmessage}}
+          <div style="margin-top:10px ;"  class="alert alert-{{type}}" role="alert">
+            {{loginmessage}}
+          </div>
+      {{/if}}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+    setTimeout(() => {
+        $('#flash-alert ').fadeOut(2000)
+        $(".alert-success").fadeOut(2000)
+        $(".alert-danger").fadeOut(2000)
+    }, 1000);
+</script>
